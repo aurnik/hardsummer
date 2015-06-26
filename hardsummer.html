@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link href='http://fonts.googleapis.com/css?family=Dosis:300,400,500,700' rel='stylesheet' type='text/css'>
+	<style type="text/css">
+		#cvs {
+			display: none;
+		}
+		body {
+			font-family: Dosis;
+		}
+		html, body {
+			margin: 0;
+		}
+		#form {
+			/*width: 1080px;
+			height: 1920px;*/
+		}
+		.block {
+			color: white;
+			font-size: 20px;
+			width: 100px;
+			height: 100px;
+			background: cyan;
+			margin-bottom: 10px;
+			transition: opacity 0.1s ease-in;
+			-webkit-transition: opacity 0.1s ease-in;
+			-moz-transition: opacity 0.1s ease-in;
+		}
+		.on {
+			opacity: 1;
+		}
+		.off {
+			opacity: 0.4;
+		}
+		#submit {
+			width: 400px;;
+			height: 100px;
+			background: green;
+			color: white;
+			font-size: 70px;
+			text-align: center;
+		}
+	</style>
+	<script src="https://code.jquery.com/jquery-git2.min.js"></script>
+</head>
+<body>
+	<div id="form">
+		<div class="block on" data-artist="CHROMEO" data-stage="blue" data-length="1.5" data-start="10">CHROMEO</div>
+		<div class="block on" data-artist="DIE ANTWOORD" data-stage="red" data-length="1" data-start="10">DIE ANTWOORD</div>
+		<div class="block on" data-artist="JACK U" data-stage="underground" data-length="1.5" data-start="11.5">JACK U</div>
+		<div class="block on" data-artist="BOYS NOIZE" data-stage="hard" data-length="1" data-start="8.5">BOYS NOIZE</div>
+		<div class="block on" data-artist="RATATAT" data-stage="harder" data-length="1.5" data-start="8">DUCK SAUCE</div>
+		<div class="block on" data-artist="DJ MUSTARD" data-stage="blue" data-length="1.5" data-start="7.5">DJ MUSTARD</div>
+		<div class="block on" data-artist="RL GRIME" data-stage="red" data-length="1.5" data-start="9.5">RL GRIME</div>
+		<div class="block on" data-artist="ZEDS DEAD" data-stage="harder" data-length="1.5" data-start="10.5">ZEDS DEAD</div>
+		<div class="block on" data-artist="Rooney" data-stage="hard" data-length="2" data-start="4">Rooney</div>
+		<div id="submit">Create</div>
+	</div>
+	<canvas id="cvs" width="1080" height="1920"></canvas>
+	<!-- <canvas id="cvs2" width="750" height="1334"></canvas> -->
+	<img id="out"/>
+	<script type="text/javascript">
+		var canvas = document.getElementById('cvs');
+		var context = canvas.getContext('2d');
+		var width = canvas.width;
+		var x = canvas.width / 2;
+		var white = '#f8f7fe';
+		var whiter = '#fff';
+		var whiteDarker = '#acacac';
+		var dark = '#2f2f2f';
+		var blue = "rgb(135, 241, 255)";
+		var purple = "#6369D1";
+		var green = "rgb(120,241,100)";
+		var red = "rgb(241, 81, 82)";
+		var yellow = '#F9CB40';
+		var timePadding = 4;
+		var slotPadding = 16;
+		var timeSize = 90;
+		var timeExtWidth = width - (timeSize + timePadding + slotPadding * 2);
+		var choices = [];
+
+		$(".block").click(function() {
+			if($(".off").length == 0) {
+				//all on (start), so turn all off
+				$(".block").toggleClass('on').toggleClass('off');
+			}
+			$(this).toggleClass('on').toggleClass('off'); //switch on to off and off to on
+			if($(".on").length == 0) {
+				//all off, reset to all on
+				$(".block").toggleClass('on').toggleClass('off');
+			}
+
+			var data = $(this).data(); //{start: #, length: #, stage: "stage", artist: "artist"}
+			var color;
+			switch(data.stage) {
+				case "hard":
+					color = purple;
+					break;
+				case "harder":
+					color = yellow;
+					break;
+				case "red":
+					color = red;
+					break;
+				case "blue":
+					color = blue;
+					break;
+				case "underground":
+					color = green;
+					break;
+				default:
+					color = dark;
+			}
+
+			choices.push([data.artist, color, data.length, data.start]);
+		});
+		$("#submit").click(function() {
+			context.fillStyle = white;
+			context.fillRect(0,0,1080,1920);
+			context.fillStyle = dark;
+			context.font = '100px Dosis';
+			context.textAlign = 'center';
+			context.fillText('HARD SUMMER', x, 180);
+			context.textAlign = 'left';
+			context.font = "normal 400 40px Dosis";
+			context.fillStyle = "rgba("
+			context.fillText("@aurnik",10,1908);
+
+			context.font = "normal 700 50px Dosis";
+
+			// context.fillStyle = dark;
+			// context.fillRect(865, 200, 210, 300);
+			context.fillStyle = purple;
+			context.fillRect(870,205,10,50);
+			context.fillText("HARD", 890, 250);
+			context.fillStyle = yellow;
+			context.fillRect(870,265,10,50);
+			context.fillText("HARDER", 890, 310);
+			context.fillStyle = red;
+			context.fillRect(870,325,10,50);
+			context.fillText("RED", 890, 370);
+			context.fillStyle = blue;
+			context.fillRect(870,385,10,50);
+			context.fillText("BLUE", 890, 430);
+			context.fillStyle = green;
+			context.fillRect(870,445,10,50);
+			context.fillText("UNDGRD", 890, 490);
+
+			context.textAlign = 'center';
+
+			var hours = [11,12,1,2,3,4,5,6,7,8,9,10,11];
+			var hourY = 520;
+			context.font = '72px Dosis';
+			for(var i = 0; i < 13; i++) {
+				context.fillStyle = dark;
+				context.fillRect(timePadding, hourY, timeSize, timeSize);
+				context.fillStyle = "rgba(0,0,0,"+(i/100)+")";
+				context.fillRect(timePadding * 2 + timeSize, hourY, timeExtWidth + 8 + 16, timeSize);
+				context.fillStyle = i < 2 ? whiteDarker : white;
+				context.font = 'normal 500 72px Dosis';
+				context.fillText(hours[i], 4 + timeSize / 2, hourY + timeSize - 19);
+				hourY += timeSize + timePadding;
+			}
+			//testing
+
+
+			var len = choices.length;
+			var intervals = []; //[time (int), start (bool)]
+			choices.sort(function(a, b) {
+				return (a[3] + a[2]) - (b[3] + b[2]);
+			});
+			for(var i = 0; i < len; i++) {
+				intervals.push([choices[i][3], true, i]); //start
+				intervals.push([choices[i][3] + choices[i][2], false, i]); //end
+			}
+			intervals.sort(function(a, b) {
+				var diff = a[0] - b[0];
+				if(diff == 0) {
+					if(!b[1]) { // second el is an end
+						return 1;
+					}
+					return -1; //first el is end or they're both starts
+				}
+				return diff;
+			});
+			var intLen = intervals.length;
+			var sCount = 0;
+			var lastEnd = 0;
+			var prev = 0;
+			var firstEnd = -1;
+			var borrow = 0;
+			for (var i = 0; i < intLen; i++) {
+				if(intervals[i][1]) { //start
+
+					function thisEnd() {
+						for(var j = i + 1; j < intLen; j++) {
+							if(intervals[j][2] == intervals[i][2]) {
+								//3rd element must be same
+								return j;
+							}
+						}
+						return -1;
+					}
+
+					if(sCount == 0) { //no above overlaps
+						//set firstend to end of this start
+						firstEnd = intervals[thisEnd()][0];
+						sCount++;
+					}
+					else if(intervals[i][0] >= firstEnd) {
+						choices[intervals[i][2]][6] = true; //first in row
+						//set firstEnd to end of this start
+						firstEnd = intervals[thisEnd()][0];
+						borrow++;
+					}
+					else {
+						choices[intervals[i][2]][6] = false; //not first in row
+						sCount++;
+					}
+
+					if(borrow == 0 && lastEnd != 0) {
+						sCount -= lastEnd;
+						lastEnd = 0;
+					}
+				}
+				else { //end
+					choices[intervals[i][2]][4] = sCount; //itemsOnRow
+					if(firstEnd == intervals[i][0]) { //first
+						prev = 0;
+					}
+					choices[intervals[i][2]][5] = prev; //prevItems
+					if(borrow != 0) {
+						sCount -= borrow;
+						borrow = 0;
+					}
+					lastEnd++;
+					prev++;
+				}
+				/*
+					|---------|----|    |----|
+					     |---------|
+							      |---------|
+					1....2....3....4....5....6
+				*/
+				// 1S, 2S, 3E, 3S, 3S, 4E, 4E, 5E, 5S, 6E
+			}
+			for(var i = 0; i < len; i++) {
+				//create(name, color, hrs, itemsOnRow, prevItems, timeStart, first)
+				create(choices[i][0], choices[i][1], choices[i][2], choices[i][4], choices[i][5], choices[i][3], choices[i][6]);
+			}
+			// create("CHROMEO", blue, 1.5, 2, 0, 10, true);
+			// create("DIE ANTWOORD", red, 1, 2, 1, 10, true);
+			// create("JACK " + String.fromCharCode(220), green, 1.5, 1, 0, 11.5, true);
+			// create("BOYS NOIZE", purple, 1, 3, 0, 8.5, true);
+			// create("DUCK SAUCE", yellow, 1.5, 3, 1, 8, true);
+			// create("DJ MUSTARD", blue, 1.5, 3, 2, 7.5, true);
+
+
+
+			context.fillStyle = "rgba(0,0,0,0.5)";
+			// context.fillRect(1080- slotPadding, 0, slotPadding, 1980);
+
+			//create(name, color, hrs, itemsOnRow, prevItems, timeStart, first)
+			/*
+				name: name of Artist
+				color: color according to stage
+				hrs: total hours of set
+				itemsOnRow: num of other sets on this row
+				prevItems: items before this item on this row
+				timeStart: time since start of festival
+				first: bool to represent if this is the first on row
+			*/
+			function create(name, color, hrs, itemsOnRow, prevItems, timeStart, first) {
+
+				context.fillStyle = color;
+				startOnHour = (timeStart * 100) % 100 == 0 ? true : false;
+				originX = (timeSize + timePadding + slotPadding) + prevItems * (((timeExtWidth - (itemsOnRow - 1) * slotPadding) / itemsOnRow) + slotPadding);
+				originY = startOnHour ? 520 + timeSize * timeStart + timeStart * timePadding : 520 + timeSize * timeStart + 4 * Math.floor(timeStart);
+				sizeX = (itemsOnRow == 1) ? (timeExtWidth / itemsOnRow) : ((timeExtWidth - (itemsOnRow - 1) * slotPadding) / itemsOnRow);
+				console.log(name + " has itemsOnRow " + itemsOnRow);
+				sizeY = startOnHour ? timeSize * hrs + 4 * Math.floor(hrs - 0.01) : timeSize * hrs + 4 * Math.floor(hrs);
+				originY += 8;
+				sizeY -= 16;
+		      	context.fillRect(originX, originY, sizeX, sizeY);
+				context.fillStyle = whiter;
+				textSize = sizeY / 2;
+				if(sizeY * 3 > sizeX) {
+					textSize = sizeY / 3;
+				}
+				textOffset = Math.floor(Math.sqrt(textSize));
+				context.font = 'normal 500 ' + textSize + 'px Dosis';
+		      	context.shadowBlur = 0;
+				context.fillText(name, originX + (sizeX / 2), originY + (sizeY / 2) + (textSize / 2) - textOffset);
+
+				context.fillStyle = "rgba(0,0,0,0.5)";
+			}
+			//finish tests
+			// context.fillStyle = "rgba(0,0,0,0.4)";
+			// context.fillRect(1064, 0, 16, 1920);
+			url = canvas.toDataURL();
+
+			document.getElementById("out").src = url;
+		});
+	</script>
+</body>
+</html>
